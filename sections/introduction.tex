@@ -1,2 +1,86 @@
 \section{Introduction}\label{sec:intro}
 
+\subsection{The Problem}
+
+Internet censorship research has traditionally focused on the network layer:
+whether a website is DNS-poisoned, IP-blocked, or throttled somewhere between the
+user and the server. A mature ecosystem of tools measures this activity, most
+notably OONI, the Open Observatory of Network
+Interference~\cite{filasto2012ooni}, and Censored
+Planet~\cite{sundararaman2020censoredplanet}. But a growing amount of censorship
+now happens \emph{above} the network, at the level of the mobile app stores
+operated by Apple and Google. Because these two companies run a separate
+storefront for each country, a government that wants to make an app disappear no
+longer needs to touch the network at all. It can simply compel Apple or Google to
+remove that app from its national store. For the ordinary smartphone user, an app
+that is not in the store effectively does not exist, and no firewall or traffic
+filtering is required to achieve that result.
+
+The problem this project addresses is that we lack systematic, ongoing visibility
+into this form of censorship. While the network layer is measured continuously by
+OONI and others, the app-store layer is measured far less consistently, even
+though it has become one of the most powerful chokepoints for controlling access
+to VPNs, secure messaging, and independent news. We build a measurement pipeline
+that queries the per-country storefronts of the Apple App Store and Google Play
+for a fixed basket of censorship-sensitive apps, records which apps are available
+in which countries, tracks changes over the term, and cross-validates the results
+against transparency reports and documented events.
+
+\subsection{Why It Matters}
+
+App-store removals are neither hypothetical nor rare. They are a recurring,
+government-driven mechanism with large real-world reach.
+
+\paragraph{Russia (2024).} In July 2024, Apple removed at least 25 VPN apps from
+the Russian App Store, including NordVPN, Proton VPN, and Private Internet Access,
+after a demand from the state communications regulator
+Roskomnadzor~\cite{techcrunch2024russia}. Apple's own notice to developers stated
+that the apps would be removed ``per demand from Roskomnadzor'' because they
+contained content ``illegal in Russia''~\cite{moscowtimes2024russia}. Independent
+monitoring by the GreatFire App Censorship Project put the total at roughly 60
+VPN apps removed over the summer of 2024~\cite{applecensorship}.
+
+\paragraph{China.} Apple has removed VPN apps from the Chinese App Store since
+2017 to comply with local law~\cite{cnbc2017china}. A review by the Tech
+Transparency Project identified 3{,}257 apps missing from the China store, with
+nearly a third relating to human-rights-sensitive topics such as privacy tools,
+Tibetan Buddhism, Hong Kong protests, and LGBTQ+
+issues~\cite{ttp2021china}.
+
+\paragraph{India (2020).} India banned TikTok and dozens of other Chinese apps in
+June 2020, a figure that later grew to more than 500 apps, affecting an estimated
+200 million TikTok users in the country and removing the apps from both major
+stores~\cite{techcrunch2020india}.
+
+The importance of the problem is reinforced by the fact that dedicated
+civil-society and academic projects have grown up specifically to track it, which
+signals both demand and an unfilled gap. GreatFire's AppleCensorship project runs
+an ``App Store Monitor'' that crawls 155 country stores to test
+availability~\cite{applecensorship}, and Ververis et al.\ introduced a
+methodology for querying app-store search engines and public APIs across
+countries, finding that apps focused on Tibetan or LGBTQ+ topics face
+disproportionately high censorship~\cite{ververis2019shedding}. Our project
+extends this line of work (Section~\ref{sec:related}): existing coverage is
+either event-driven news reporting or focused narrowly on VPNs in Russia and
+China, whereas we run a controlled, longitudinal, multi-category measurement and
+pair it with an explicit treatment of the attribution problem.
+
+\subsection{Who Can Act on the Results}
+
+Our results support several concrete actions, each mapped to actors equipped to
+take them. \textbf{Journalists and civil-society organizations} (GreatFire,
+Freedom House, Access Now, EFF) can use a longitudinal availability dataset to
+detect and publicize removals close to when they happen, rather than relying on
+developers to notice their own delisting. \textbf{The platform companies
+themselves} (Apple, Google) are the only parties who can restore an app or
+improve disclosure; independent measurement creates external pressure and a check
+on transparency reports that, as the China case shows, can understate the scope
+of removals. \textbf{Policymakers and regulators} in democracies, for example
+bodies implementing the EU Digital Services Act, can use evidence of compelled
+removals to inform platform-transparency and takedown-reporting rules.
+\textbf{Circumvention-tool developers} can use the data to see which categories
+and regions are most aggressively targeted and prioritize alternative
+distribution channels (sideloading, third-party stores, web apps). Finally,
+\textbf{users and the research community} gain an open dataset and reproducible
+method that complements network-level tools such as OONI at a layer they do not
+currently cover.

@@ -1,0 +1,35 @@
+\section{Ethics}\label{sec:ethics}
+
+The measurement itself is low-risk. We query public APIs and storefronts from our
+own machines; we do not probe networks inside censored countries, do not recruit
+or expose any human participants, and do not put real users at risk of
+retaliation. This is a deliberate design advantage over network-measurement
+studies that can endanger in-country volunteers. We will respect platform rate
+limits and terms, throttle and cache requests to avoid burdening the services, and
+release only aggregate availability data plus our code.
+
+Nonetheless, the project has ethical dimensions worth stating.
+
+\paragraph{Selection bias in the app basket.} Our results reflect \emph{our}
+choices about which apps count as ``sensitive.'' A basket assembled by a
+US-based team may over-represent Western apps (NordVPN, Signal, NYT) and miss
+locally important tools that are the real targets of censorship in a given
+country. This bias could make some repressive environments look freer than they
+are simply because we did not think to measure the right apps. We will document
+our selection criteria explicitly, draw partly on external lists (e.g., the
+Citizen Lab test lists and GreatFire records) to reduce our own blind spots, and
+frame findings as a lower bound on censorship rather than a complete census.
+
+\paragraph{Attribution and the fairness of claims.} Labeling an app's absence as
+``censorship'' when it was actually a licensing or sanctions decision would be
+unfair to the platform and could mislead readers. Our confidence-labeling
+procedure (Section~\ref{sec:eval}) is partly an ethical safeguard: we commit to
+distinguishing documented, inferred, and ambiguous cases rather than overstating
+certainty.
+
+\paragraph{Dual-use considerations.} Mapping which circumvention apps are
+available where is primarily useful to researchers, journalists, and users seeking
+access, but the same map could in principle inform a censor about gaps in its own
+enforcement. We judge the transparency benefit to substantially outweigh this
+risk, since the information is derived entirely from public storefronts that
+censors already control, and civil-society projects already publish similar data.

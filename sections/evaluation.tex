@@ -1,0 +1,57 @@
+\section{Evaluation}\label{sec:eval}
+
+Because this is a measurement study rather than a system, our evaluation asks
+whether the method produces \emph{trustworthy, interpretable} evidence of
+app-store censorship. We evaluate along three axes.
+
+\subsection{Coverage}
+
+We report the breadth of the measurement: the number of apps and countries
+successfully queried, the fraction of the app $\times$ country matrix for which we
+obtained a definitive availability signal, and the cadence and completeness of the
+weekly time series. Coverage is the denominator against which every other claim is
+made, so we state explicitly which storefronts or apps we could not measure and
+why (e.g., endpoints that rate-limited us or apps with ambiguous identifiers).
+
+\subsection{Validation Against Ground Truth}
+
+The central test of the method is whether it independently reproduces removals
+that are already documented. We compare our detections against (a) Apple and
+Google transparency reports, (b) GreatFire AppleCensorship
+records~\cite{applecensorship}, and (c) news-reported events such as the July 2024
+Russian VPN removals~\cite{techcrunch2024russia,moscowtimes2024russia} and the
+2017 China VPN removals~\cite{cnbc2017china}. If our pipeline surfaces these known
+events from raw availability data, that validates the measurement; disagreements
+are analyzed as either method limitations or genuinely new findings.
+
+\subsection{Attribution: Separating Censorship From Coincidence}
+
+The hardest evaluation question is the one that motivates the project: a missing
+app does not by itself prove government censorship, since the cause could be a
+developer decision, a licensing restriction, a sanctions regime, or a
+policy-violation removal. We do not claim to resolve intent perfectly; instead we
+build a defensible attribution procedure and evaluate its discriminating power:
+\begin{itemize}
+  \item \textbf{Control apps.} A neutral app (e.g., a weather app) missing in a
+  country is a signal of a benign cause; a VPN missing in the same country is far
+  more suspicious. The gap between control and sensitive categories bounds the
+  false-positive rate.
+  \item \textbf{Category-level patterns.} A single missing VPN could be
+  coincidence; \emph{all} VPNs disappearing in one country over one week is
+  consistent with a policy action, not chance.
+  \item \textbf{Triangulation.} We corroborate suspected censorship events against
+  transparency reports and news, and report a confidence label (documented /
+  strongly inferred / ambiguous) for each.
+\end{itemize}
+We will quantify how cleanly these heuristics separate our sensitive basket from
+the controls, and we will be explicit in the writeup about what the data can and
+cannot establish. This honest treatment of attribution is itself a contribution,
+since it directly addresses a known weakness of availability-based censorship
+measurement.
+
+\subsection{Correlation With External Indices}
+
+Finally, we test whether per-country censorship intensity (missing sensitive apps,
+normalized by controls) correlates with independent repression measures such as
+\emph{Freedom on the Net}. A strong positive correlation would be external
+evidence that our metric captures real censorship rather than measurement noise.

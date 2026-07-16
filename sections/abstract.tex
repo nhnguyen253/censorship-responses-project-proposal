@@ -1,3 +1,18 @@
 \abstract{
-Abstract. 
+Most Internet censorship research measures the network layer: whether a site is
+DNS-poisoned, IP-blocked, or throttled. Yet a growing share of censorship now
+occurs above the network, at the mobile app stores operated by Apple and Google.
+Because both companies run a separate storefront for every country, a government
+that wants to make an app disappear no longer needs to filter traffic; it can
+simply compel the platform to remove the app from its national store. We propose
+a longitudinal measurement study of this ``new chokepoint.'' We build a pipeline
+that queries the per-country storefronts of the Apple App Store and Google Play
+for a curated basket of censorship-sensitive apps (VPNs, secure messengers, news,
+and topically sensitive apps), records availability across dozens of countries,
+tracks removals over the term, and cross-validates against platform transparency
+reports and documented events. A central methodological contribution is an
+explicit treatment of the attribution problem: distinguishing a
+government-compelled removal from an ordinary developer or licensing decision. We
+release an open dataset and reproducible method that complements network-level
+tools such as OONI at a layer they do not currently cover.
 }

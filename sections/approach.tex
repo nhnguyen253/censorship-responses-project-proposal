@@ -1,0 +1,74 @@
+\section{Project Preparation and Prerequisites}\label{sec:approach}
+
+This is a measurement-based project. Below we describe the data we already have
+access to, the data we will collect, the tooling we will build or extend, and the
+results we expect to produce and how we will present them.
+
+\subsection{Data We Have}
+
+The core measurement surface is public and queryable from any vantage point,
+which is a significant practical advantage: we do not need machines or volunteers
+inside censored countries. Specifically:
+\begin{itemize}
+  \item \textbf{Apple App Store.} The public iTunes Search and Lookup API accepts
+  a \texttt{country} parameter, so the same app identifier can be queried against
+  every national storefront and will return a result where the app is available
+  and an empty result where it is not.
+  \item \textbf{Google Play.} Google exposes no equally clean API, but mature
+  open-source scrapers (e.g., \texttt{google-play-scraper}) and the prior
+  \texttt{appavail} tooling released with Ververis et
+  al.~\cite{ververis2019shedding} allow per-country availability checks.
+  \item \textbf{Ground-truth references.} Apple and Google publish transparency
+  reports listing government-driven takedown requests; GreatFire's
+  AppleCensorship provides historical removal records~\cite{applecensorship}; and
+  Freedom House's \emph{Freedom on the Net} provides per-country repression
+  scores we can correlate against.
+\end{itemize}
+
+\subsection{Data We Will Collect}
+
+We will assemble two fixed lists and cross them:
+\begin{itemize}
+  \item An \textbf{app basket} of roughly 40--60 apps spanning categories that
+  governments are known to target: VPNs (e.g., NordVPN, Proton VPN, Tor), secure
+  messengers (Signal, Telegram, WhatsApp), independent and foreign news (NYT,
+  BBC, regional outlets), and topically sensitive apps (LGBTQ+, Tibetan, and
+  religious apps). Critically, we include a set of \textbf{neutral control apps}
+  (e.g., a calculator, a weather app) that no government is expected to censor.
+  \item A \textbf{country list} covering all storefronts we can query, with
+  emphasis on known censors (China, Russia, Iran, Turkey, UAE, India) and
+  free-expression baselines (US, Germany, Canada).
+\end{itemize}
+Querying the full cross product yields an availability matrix (apps $\times$
+countries). We will re-run the collection \textbf{weekly over the term} so that we
+capture removals and reinstatements as time series rather than a single snapshot.
+
+\subsection{Tooling}
+
+Rather than build from scratch, we will extend the \texttt{appavail} scripts from
+prior work~\cite{ververis2019shedding} and the \texttt{google-play-scraper}
+library, wrapping them in a scheduler that snapshots results, diffs consecutive
+runs, and stores everything in a versioned dataset. Analysis will use Python and
+Pandas. All code and the resulting dataset will be released openly.
+
+\subsection{Expected Results and Presentation}
+
+We expect to produce: (1) a \textbf{country $\times$ app availability heatmap},
+where censorship appears as dark bands over particular countries or categories;
+(2) a \textbf{timeline} of any removals or reinstatements observed during the
+term; and (3) a \textbf{correlation analysis} between per-country missing-app
+counts and independent repression indices such as \emph{Freedom on the Net}. Even
+a ``null'' result (a clean, validated map of what is available where) is a
+contribution, because no one currently maintains such a dataset systematically
+across categories.
+
+\subsection{Prerequisites and Feasibility}
+
+The project requires only Python/Pandas proficiency and familiarity with HTTP
+APIs and light scraping, all within the team's background. There is no dependency
+on hardware, field partners, or third parties, so the timeline is under our
+control: scraper construction in weeks 1--2, collection over the following weeks,
+and analysis and writing at the end. The main technical risks are API rate limits
+and undocumented changes to store endpoints, both of which we mitigate by
+throttling requests, caching raw responses, and cross-checking two independent
+data sources (direct queries and AppleCensorship records).

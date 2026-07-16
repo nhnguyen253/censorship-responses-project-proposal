@@ -1,3 +1,65 @@
 \section{Related Work}\label{sec:related}
 
-Foo\cite{reich2013modular}.
+We organize prior work into three themes: (1) network-layer censorship
+measurement, (2) app-store availability and censorship, and (3) the consolidation
+of control at platform ``chokepoints'' above the network. We then articulate how
+our project extends each.
+
+\subsection{Network-Layer Censorship Measurement}
+
+A large body of work measures censorship on the network path. OONI provides an
+open platform and global volunteer network for detecting DNS tampering, TCP/IP
+blocking, and HTTP interference~\cite{filasto2012ooni}. Censored Planet performs
+remote, Internet-wide, longitudinal measurement without requiring vantage points
+inside censored countries~\cite{sundararaman2020censoredplanet}, and subsequent
+work has advanced the statistical analysis of the resulting
+data~\cite{sundararaman2023analysis}. This literature is mature and
+methodologically rigorous, but by construction it observes the \emph{transport}
+of content, not its \emph{distribution} through app marketplaces. An app can be
+perfectly reachable on the network and still be unavailable to users because it
+has been removed from their national store. Our work targets exactly this blind
+spot.
+
+\subsection{App-Store Availability and Censorship}
+
+The most direct precedent is Ververis et al.~\cite{ververis2019shedding}, who
+introduced a methodology for querying the public search engines and APIs of the
+Apple App Store, Google Play, and Tencent MyApp across countries, cross-verified
+with network measurements, and focused primarily on VPN availability in Russia
+and China. Civil-society monitoring extends this in practice: GreatFire's
+AppleCensorship project operates an App Store Monitor and a Play Store Monitor
+that crawl per-country stores and publish removal reports~\cite{applecensorship},
+and investigative reporting such as the Tech Transparency Project's audit of the
+China store has quantified thousands of missing apps~\cite{ttp2021china}.
+Event-driven journalism documents individual removals as they
+happen~\cite{techcrunch2024russia,moscowtimes2024russia,cnbc2017china,techcrunch2020india}.
+
+\subsection{Platform Chokepoints Above the Network}
+
+A third theme frames app-store removals as one instance of a broader shift:
+control over speech has consolidated at a small number of infrastructure
+intermediaries (app stores, CDNs, payment processors, and cloud hosts) that sit
+above the traditional network layer. Recent measurement of sanctions-driven
+restrictions on Russian media shows how removals and geoblocking at these upper
+layers reshape access~\cite{internetsanctions2024}. This literature motivates
+\emph{why} the app-store layer deserves the same continuous, quantitative
+scrutiny that the network layer already receives.
+
+\subsection{How We Extend Prior Work}
+
+Our project builds most directly on Ververis et al.~\cite{ververis2019shedding}
+and the AppleCensorship monitoring effort~\cite{applecensorship}, and extends
+them in three ways. \emph{First, breadth of categories.} Prior academic work
+centers on VPNs; we measure a curated multi-category basket (VPNs, secure
+messengers, news, and topically sensitive apps plus neutral controls), enabling
+comparison of censorship intensity across app types. \emph{Second,
+longitudinality within a controlled design.} Rather than a one-shot snapshot or
+an always-on public dashboard, we run repeated measurements on a fixed basket
+over the term so that we can attribute \emph{changes} (removals and
+reinstatements) to specific events. \emph{Third, explicit attribution
+methodology.} A recurring weakness of availability studies is that a missing app
+does not prove government censorship; it may reflect a developer, licensing, or
+policy-violation decision. We treat this attribution problem as a first-class
+object of study, using control apps, category-level patterns, and triangulation
+against transparency reports and news to reason about intent
+(Section~\ref{sec:eval}).
