@@ -4,15 +4,20 @@ DNS-poisoned, IP-blocked, or throttled. Yet a growing share of censorship now
 occurs above the network, at the mobile app stores operated by Apple and Google.
 Because both companies run a separate storefront for every country, a government
 that wants to make an app disappear no longer needs to filter traffic; it can
-simply compel the platform to remove the app from its national store. We propose
-a longitudinal measurement study of this ``new chokepoint.'' We build a pipeline
-that queries the per-country storefronts of the Apple App Store and Google Play
-for a curated basket of censorship-sensitive apps (VPNs, secure messengers, news,
-and topically sensitive apps), records availability across dozens of countries,
-tracks removals over the term, and cross-validates against platform transparency
-reports and documented events. A central methodological contribution is an
-explicit treatment of the attribution problem: distinguishing a
-government-compelled removal from an ordinary developer or licensing decision. We
-release an open dataset and reproducible method that complements network-level
-tools such as OONI at a layer they do not currently cover.
+simply compel the platform to remove the app from its national store. We report a
+snapshot measurement of this ``new chokepoint.'' We built a pipeline that queries
+the per-country storefronts of the Apple App Store for a curated basket of 32
+apps (VPNs, secure messengers, news, topically sensitive apps, and neutral
+controls) across 14 countries, and cross-validated the results against documented
+removal events. Our snapshot independently reproduces every documented removal we
+tested, including the 2024 Russian VPN purge, the 2017 China VPN and New York
+Times removals, and Signal's absence from the China store. It also surfaces a
+clean cross-country signal: sensitive-app unavailability is negatively correlated
+with Freedom House's \emph{Freedom on the Net} score (Spearman $r=-0.62$), driven
+by near-total removal in China and a VPN-focused purge in Russia. A central
+methodological contribution is an explicit treatment of the attribution problem:
+distinguishing a government-compelled removal from a sanctions-driven developer
+withdrawal or a benign regional app variant. We release an open dataset and
+reproducible method that complements network-level tools such as OONI at a layer
+they do not currently cover.
 }

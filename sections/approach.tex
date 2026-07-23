@@ -1,74 +1,57 @@
-\section{Project Preparation and Prerequisites}\label{sec:approach}
+\section{Data and Method}\label{sec:approach}
 
-This is a measurement-based project. Below we describe the data we already have
-access to, the data we will collect, the tooling we will build or extend, and the
-results we expect to produce and how we will present them.
+This is a measurement-based project. Below we describe the data source, the basket
+and country list we measured, the pipeline we built, and how the raw data becomes
+the results in Section~\ref{sec:results}.
 
-\subsection{Data We Have}
+\subsection{Data Source}
 
-The core measurement surface is public and queryable from any vantage point,
-which is a significant practical advantage: we do not need machines or volunteers
-inside censored countries. Specifically:
-\begin{itemize}
-  \item \textbf{Apple App Store.} The public iTunes Search and Lookup API accepts
-  a \texttt{country} parameter, so the same app identifier can be queried against
-  every national storefront and will return a result where the app is available
-  and an empty result where it is not.
-  \item \textbf{Google Play.} Google exposes no equally clean API, but mature
-  open-source scrapers (e.g., \texttt{google-play-scraper}) and the prior
-  \texttt{appavail} tooling released with Ververis et
-  al.~\cite{ververis2019shedding} allow per-country availability checks.
-  \item \textbf{Ground-truth references.} Apple and Google publish transparency
-  reports listing government-driven takedown requests; GreatFire's
-  AppleCensorship provides historical removal records~\cite{applecensorship}; and
-  Freedom House's \emph{Freedom on the Net} provides per-country repression
-  scores we can correlate against.
-\end{itemize}
+The core measurement surface is public and queryable from any vantage point, which
+is a significant practical advantage: we did not need machines or volunteers inside
+censored countries. The public Apple iTunes Lookup API accepts a \texttt{country}
+parameter, so the same app identifier can be queried against every national
+storefront. A lookup-by-ID returns \texttt{resultCount}${\geq}1$ where the app is
+available in that storefront and \texttt{resultCount}${=}0$ where it is not. This
+is a cleaner signal than keyword search, which can return near-matches or
+copycats. For ground truth we used documented removal events (the 2024 Russian VPN
+purge, the 2017 China VPN and \emph{New York Times} removals) and Freedom House's
+\emph{Freedom on the Net} 2024 per-country scores~\cite{fotn2024}.
 
-\subsection{Data We Will Collect}
+We restricted this study to the Apple App Store. Google Play exposes no equally
+clean per-country availability API; robust Play measurement requires scraping that
+we judged too unreliable to complete within our timeframe, so we leave it to future
+work and treat our findings as Apple-specific (Section~\ref{sec:conclusion}).
 
-We will assemble two fixed lists and cross them:
-\begin{itemize}
-  \item An \textbf{app basket} of roughly 40--60 apps spanning categories that
-  governments are known to target: VPNs (e.g., NordVPN, Proton VPN, Tor), secure
-  messengers (Signal, Telegram, WhatsApp), independent and foreign news (NYT,
-  BBC, regional outlets), and topically sensitive apps (LGBTQ+, Tibetan, and
-  religious apps). Critically, we include a set of \textbf{neutral control apps}
-  (e.g., a calculator, a weather app) that no government is expected to censor.
-  \item A \textbf{country list} covering all storefronts we can query, with
-  emphasis on known censors (China, Russia, Iran, Turkey, UAE, India) and
-  free-expression baselines (US, Germany, Canada).
-\end{itemize}
-Querying the full cross product yields an availability matrix (apps $\times$
-countries). We will re-run the collection \textbf{weekly over the term} so that we
-capture removals and reinstatements as time series rather than a single snapshot.
+\subsection{App Basket and Country List}
 
-\subsection{Tooling}
+We assembled a basket of \textbf{32 apps} across five categories
+(the full list appears in Figure~\ref{fig:heatmap}): nine \textbf{VPNs} (e.g., NordVPN,
+Proton VPN, Psiphon, Onion Browser), six \textbf{secure messengers} (Signal,
+Telegram, WhatsApp, Threema, Session, Wire), six \textbf{news} apps (NYT, BBC, The
+Guardian, Al Jazeera, Deutsche Welle, Voice of America), five \textbf{topically
+sensitive} apps (Grindr and HER for LGBTQ+, Quran Majeed, a Dalai Lama app, and
+the Bridgefy offline mesh messenger), and six \textbf{neutral control} apps
+(Candy Crush, Duolingo, Google Maps, Google Translate, The Weather Channel,
+Microsoft Word) that no government is expected to target. Every app identifier was
+validated against the US baseline before inclusion: an ID that did not resolve in
+the US store was corrected or dropped.
 
-Rather than build from scratch, we will extend the \texttt{appavail} scripts from
-prior work~\cite{ververis2019shedding} and the \texttt{google-play-scraper}
-library, wrapping them in a scheduler that snapshots results, diffs consecutive
-runs, and stores everything in a versioned dataset. Analysis will use Python and
-Pandas. All code and the resulting dataset will be released openly.
+We measured \textbf{14 country storefronts}: known censors China, Russia, Vietnam,
+Saudi Arabia, Pakistan, Egypt, the UAE, Turkey, and India, and free-expression
+baselines the United States, France, Germany, the United Kingdom, and Japan. All 14
+have a \emph{Freedom on the Net} 2024 score, spanning 9 (China) to 78 (UK and
+Japan). We originally included Iran, but every Iranian query returned HTTP 400:
+Apple operates \emph{no} storefront in Iran under US sanctions, so there is nothing
+to query. This is a distinct mechanism from per-app removal, and we exclude Iran
+from the measurable set and report it as a limitation.
 
-\subsection{Expected Results and Presentation}
+\subsection{Pipeline}
 
-We expect to produce: (1) a \textbf{country $\times$ app availability heatmap},
-where censorship appears as dark bands over particular countries or categories;
-(2) a \textbf{timeline} of any removals or reinstatements observed during the
-term; and (3) a \textbf{correlation analysis} between per-country missing-app
-counts and independent repression indices such as \emph{Freedom on the Net}. Even
-a ``null'' result (a clean, validated map of what is available where) is a
-contribution, because no one currently maintains such a dataset systematically
-across categories.
-
-\subsection{Prerequisites and Feasibility}
-
-The project requires only Python/Pandas proficiency and familiarity with HTTP
-APIs and light scraping, all within the team's background. There is no dependency
-on hardware, field partners, or third parties, so the timeline is under our
-control: scraper construction in weeks 1--2, collection over the following weeks,
-and analysis and writing at the end. The main technical risks are API rate limits
-and undocumented changes to store endpoints, both of which we mitigate by
-throttling requests, caching raw responses, and cross-checking two independent
-data sources (direct queries and AppleCensorship records).
+We built a small Python pipeline (\texttt{collect.py}) that queries the full
+$32 \times 14 = 448$-cell cross product, classifies each cell as \emph{available},
+\emph{unavailable}, or \emph{error}, and \textbf{caches the raw JSON response for
+every query} so the entire analysis is reproducible offline. The collector throttles
+requests, retries transient failures with backoff, and keeps \emph{error} distinct
+from \emph{unavailable} so coverage is reported honestly. Analysis
+(\texttt{analyze.py}) uses Pandas and Matplotlib. All code, the raw response cache,
+and the availability matrix are released openly.

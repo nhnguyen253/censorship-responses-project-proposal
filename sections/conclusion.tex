@@ -1,0 +1,29 @@
+\section{Limitations and Conclusion}\label{sec:conclusion}
+
+\paragraph{Limitations.} Our study is a \emph{single snapshot}, not a time series,
+so we observe the state of the storefronts on one day and recover historical
+removals only by cross-referencing documented events, not by watching them happen.
+It covers only the \emph{Apple} App Store; Google Play, third-party Android stores,
+and sideloading are out of scope, so our numbers are a lower bound on app-store
+censorship overall. The basket is US-assembled and therefore under-samples
+locally important apps, which likely makes some repressive environments look freer
+than they are. Availability is an imperfect proxy for intent: as our own data
+shows, a missing app can reflect a sanctions-driven developer withdrawal (Candy
+Crush in Russia) or a benign regional variant (BBC in the UK) rather than
+government censorship, and Iran illustrates a third mechanism entirely, the total
+absence of a storefront under sanctions. We mitigate these with control apps,
+category-level reasoning, and confidence labels, but we do not claim to resolve
+intent perfectly.
+
+\paragraph{Conclusion.} Even within these limits, a single afternoon of public API
+queries reproduced every documented removal we tested and surfaced a clean,
+interpretable map of app-store censorship: near-total removal in China, a
+VPN-focused purge in Russia, a consistent LGBTQ+-app pattern across the Gulf and
+Turkey, and a moderate negative correlation with Internet-freedom scores. This
+confirms the core premise of the project, that the app-store layer is a real and
+measurable censorship chokepoint that network-level tools do not observe, and that
+it can be monitored cheaply and safely from outside the censored countries. The
+natural next step is to run this pipeline continuously and add Google Play, turning
+today's snapshot into the longitudinal observatory the layer still lacks. We
+release our code, raw response cache, and availability matrix to make that
+straightforward.

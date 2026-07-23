@@ -16,15 +16,18 @@ remove that app from its national store. For the ordinary smartphone user, an ap
 that is not in the store effectively does not exist, and no firewall or traffic
 filtering is required to achieve that result.
 
-The problem this project addresses is that we lack systematic, ongoing visibility
-into this form of censorship. While the network layer is measured continuously by
-OONI and others, the app-store layer is measured far less consistently, even
-though it has become one of the most powerful chokepoints for controlling access
-to VPNs, secure messaging, and independent news. We build a measurement pipeline
-that queries the per-country storefronts of the Apple App Store and Google Play
-for a fixed basket of censorship-sensitive apps, records which apps are available
-in which countries, tracks changes over the term, and cross-validates the results
-against transparency reports and documented events.
+The problem this project addresses is that we lack systematic visibility into this
+form of censorship. While the network layer is measured continuously by OONI and
+others, the app-store layer is measured far less consistently, even though it has
+become one of the most powerful chokepoints for controlling access to VPNs, secure
+messaging, and independent news. We built a measurement pipeline that queries the
+per-country storefronts of the Apple App Store for a fixed basket of
+censorship-sensitive apps, records which apps are available in which countries, and
+cross-validates the results against transparency reports and documented events. In
+this paper we report a single, carefully validated snapshot of 32 apps across 14
+national storefronts. That snapshot independently reproduces every documented
+removal we tested and yields a clean cross-country censorship signal
+(Section~\ref{sec:results}).
 
 \subsection{Why It Matters}
 
@@ -59,11 +62,13 @@ an ``App Store Monitor'' that crawls 155 country stores to test
 availability~\cite{applecensorship}, and Ververis et al.\ introduced a
 methodology for querying app-store search engines and public APIs across
 countries, finding that apps focused on Tibetan or LGBTQ+ topics face
-disproportionately high censorship~\cite{ververis2019shedding}. Our project
-extends this line of work (Section~\ref{sec:related}): existing coverage is
-either event-driven news reporting or focused narrowly on VPNs in Russia and
-China, whereas we run a controlled, longitudinal, multi-category measurement and
-pair it with an explicit treatment of the attribution problem.
+disproportionately high censorship~\cite{ververis2019shedding}. Our work extends
+this line of work (Section~\ref{sec:related}): existing coverage is either
+event-driven news reporting or focused narrowly on VPNs in Russia and China,
+whereas we run a controlled, multi-category measurement with neutral controls and
+pair it with an explicit treatment of the attribution problem, the question of
+whether a missing app reflects government censorship rather than a sanctions-driven
+withdrawal or a benign regional variant.
 
 \subsection{Who Can Act on the Results}
 
